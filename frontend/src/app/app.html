@@ -1,0 +1,68 @@
+<mat-toolbar class="toolbar">
+  <div class="toolbar-inner">
+    <a class="brand" routerLink="/" aria-label="CineMatch home">
+      <mat-icon class="filled" aria-hidden="true">movie_filter</mat-icon>
+      <span>CineMatch</span>
+    </a>
+
+    <nav aria-label="Main">
+      <a matButton routerLink="/movies" routerLinkActive="active">Browse</a>
+      @if (auth.isLoggedIn()) {
+        <a matButton routerLink="/for-you" routerLinkActive="active">For You</a>
+      }
+    </nav>
+
+    <form class="search" role="search" (submit)="search($event, box)">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input #box type="search" name="q" placeholder="Search movies" aria-label="Search movies" autocomplete="off" />
+    </form>
+
+    @if (auth.user(); as user) {
+      <button matButton type="button" class="account" [matMenuTriggerFor]="accountMenu">
+        <mat-icon aria-hidden="true">account_circle</mat-icon>
+        <span class="account-name">{{ user.profile.displayName || user.username }}</span>
+      </button>
+      <mat-menu #accountMenu="matMenu" xPosition="before">
+        <a mat-menu-item routerLink="/profile">
+          <mat-icon aria-hidden="true">person</mat-icon>
+          <span>Profile</span>
+        </a>
+        @if (auth.isAdmin()) {
+          <mat-divider />
+          <a mat-menu-item routerLink="/admin/movies">
+            <mat-icon aria-hidden="true">video_library</mat-icon>
+            <span>Manage movies</span>
+          </a>
+          <a mat-menu-item routerLink="/admin/recommender">
+            <mat-icon aria-hidden="true">hub</mat-icon>
+            <span>Recommender</span>
+          </a>
+        }
+        <mat-divider />
+        <button mat-menu-item type="button" (click)="signOut()">
+          <mat-icon aria-hidden="true">logout</mat-icon>
+          <span>Sign out</span>
+        </button>
+      </mat-menu>
+    } @else {
+      <div class="guest">
+        <a matButton routerLink="/login">Sign in</a>
+        <a matButton="filled" routerLink="/register">Sign up</a>
+      </div>
+    }
+  </div>
+</mat-toolbar>
+
+<main>
+  <router-outlet />
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>CineMatch · movie recommendations with collaborative filtering on MongoDB.</span>
+    <span>
+      Ratings data: MovieLens (GroupLens Research). This product uses the TMDB API but is not endorsed or
+      certified by TMDB.
+    </span>
+  </div>
+</footer>

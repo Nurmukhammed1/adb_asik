@@ -1,0 +1,55 @@
+name: cinematch
+
+services:
+  mongo:
+    image: mongo:8.0
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      # creates the one-node replica set on first start (needed for transactions)
+      test: ["CMD", "mongosh", "--quiet", "--eval",
+             "try { rs.status().ok } catch (e) { rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'localhost:27017'}]}).ok }"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 10s
+
+  redis:
+    image: redis:7.4-alpine
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis-data:/data
+
+  # ---------- The application itself (optional) ----------
+  # Started only with:  docker compose --profile app up -d --build
+  # Plain "docker compose up -d" starts just the databases, for running the API and site from source.
+
+  api:
+    profiles: ["app"]
+    build: ./backend
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development   # keeps the API docs page (/scalar/v1) on
+      Mongo__ConnectionString: mongodb://mongo:27017/?directConnection=true
+      Redis__ConnectionString: redis:6379
+      Jwt__SigningKey: ${JWT_SIGNING_KEY:-}   # from .env; the API refuses to start without it
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:5196:8080"
+
+  web:
+    profiles: ["app"]
+    build: ./frontend
+    depends_on:
+      - api
+    ports:
+      - "127.0.0.1:8080:80"
+
+volumes:
+  mongo-data:
+  redis-data:

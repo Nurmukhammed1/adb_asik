@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CineMatch.Api/CineMatch.Api.csproj" />
+    <Project Path="src/CineMatch.Core/CineMatch.Core.csproj" />
+    <Project Path="src/CineMatch.Infrastructure/CineMatch.Infrastructure.csproj" />
+    <Project Path="src/CineMatch.Recommender/CineMatch.Recommender.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CineMatch.Tests/CineMatch.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/CineMatch.Importer/CineMatch.Importer.csproj" />
+    <Project Path="tools/CineMatch.Perf/CineMatch.Perf.csproj" />
+  </Folder>
+</Solution>

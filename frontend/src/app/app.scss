@@ -1,0 +1,137 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: auto;
+  min-height: 64px;
+  padding: 8px 16px;
+  background: var(--mat-sys-surface-container);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.toolbar-inner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  width: 100%;
+  max-width: var(--app-page-width);
+  margin: 0 auto;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 8px;
+  font: var(--mat-sys-title-large);
+  color: var(--mat-sys-on-surface);
+  text-decoration: none;
+
+  mat-icon {
+    color: var(--mat-sys-primary);
+  }
+}
+
+nav {
+  display: flex;
+  gap: 4px;
+
+  .active {
+    background: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+  }
+}
+
+.search {
+  flex: 1 1 200px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 420px;
+  margin-left: auto;
+  padding: 0 14px;
+  height: 40px;
+  border-radius: 20px;
+  background: var(--mat-sys-surface-container-highest);
+  color: var(--mat-sys-on-surface-variant);
+
+  &:focus-within {
+    outline: 2px solid var(--mat-sys-primary);
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--mat-sys-on-surface);
+    font: var(--mat-sys-body-large);
+  }
+}
+
+.guest {
+  display: flex;
+  gap: 8px;
+}
+
+.account-name {
+  max-width: 16ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: var(--app-page-width);
+  margin: 0 auto;
+  padding: 16px;
+}
+
+@media (max-width: 600px) {
+  // On a phone the bar scrolls away with the page and shows the logo without its name,
+  // so everything but the search box fits in one row.
+  .toolbar {
+    position: static;
+  }
+
+  .brand span,
+  .account-name {
+    display: none;
+  }
+
+  .brand {
+    margin-right: 0;
+  }
+
+  .search {
+    order: 5; // the search box drops to its own row on phones
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .guest,
+  .account {
+    margin-left: auto;
+  }
+}

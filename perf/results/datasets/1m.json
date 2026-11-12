@@ -1,0 +1,42 @@
+{
+  "dataset": "1m",
+  "preparedAt": "2026-11-10T12:23:55.7623726Z",
+  "import": {
+    "movies": 3883,
+    "ratings": 1000209,
+    "users": 6041,
+    "moviesSeconds": 0.73,
+    "ratingsSeconds": 9.4,
+    "usersSeconds": 3.21,
+    "ratingStatsSeconds": 1.07,
+    "indexSeconds": 6.51,
+    "totalSeconds": 21.12
+  },
+  "similarity": {
+    "startedAt": "2026-11-10T12:23:44.3912101Z",
+    "users": 6040,
+    "movies": 3706,
+    "ratings": 1000209,
+    "moviesWithNeighbors": 3395,
+    "storedPairs": 166550,
+    "loadSeconds": 7.21,
+    "buildSeconds": 3.49,
+    "saveSeconds": 0.67
+  },
+  "data": {
+    "key": "1m",
+    "movies": 3883,
+    "users": 6041,
+    "ratings": 1000209,
+    "moviesWithNeighbors": 3395,
+    "dataMb": 79.7,
+    "indexMb": 47.3
+  },
+  "machine": {
+    "os": "Microsoft Windows 10.0.26300",
+    "runtime": ".NET 10.0.12",
+    "cores": 12,
+    "memoryGb": 31.7,
+    "mongoVersion": "8.0.34"
+  }
+}

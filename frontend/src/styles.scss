@@ -1,0 +1,94 @@
+// Angular Material theme (Material 3). `mat.theme()` defines the --mat-sys-* CSS variables
+// that both the Material components and the app's own styles use.
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  color-scheme: dark; // a movie site reads best on a dark background
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$violet-palette,
+        tertiary: mat.$orange-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+
+  --app-star: #ffc247;
+  --app-page-width: 1240px;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+}
+
+a {
+  color: var(--mat-sys-primary);
+}
+
+// Material Symbols are outlined by default; `.filled` switches one icon to the solid variant.
+.mat-icon.filled {
+  font-variation-settings: 'FILL' 1;
+}
+
+// ---------- Page layout shared by all screens ----------
+
+.page {
+  box-sizing: border-box;
+  max-width: var(--app-page-width);
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.page.narrow {
+  max-width: 460px;
+}
+
+.page-title {
+  font: var(--mat-sys-headline-medium);
+  margin: 0 0 4px;
+}
+
+.page-subtitle {
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0 0 24px;
+}
+
+.section-title {
+  font: var(--mat-sys-title-large);
+  margin: 32px 0 12px;
+}
+
+.muted {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// A responsive grid of movie cards: as many columns as fit, never narrower than 150px.
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 24px 16px;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-error {
+  color: var(--mat-sys-error);
+  margin: 0 0 12px;
+}
+
+.surface-card {
+  background: var(--mat-sys-surface-container);
+  border-radius: 16px;
+  padding: 24px;
+}
