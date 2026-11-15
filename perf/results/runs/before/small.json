@@ -1,0 +1,265 @@
+{
+  "stage": "before",
+  "dataset": "small",
+  "measuredAt": "2026-11-13T20:31:56.3228589Z",
+  "data": {
+    "key": "small",
+    "movies": 9742,
+    "users": 611,
+    "ratings": 100836,
+    "moviesWithNeighbors": 3586,
+    "dataMb": 15.2,
+    "indexMb": 6.9
+  },
+  "machine": {
+    "os": "Microsoft Windows 10.0.26300",
+    "runtime": ".NET 10.0.12",
+    "cores": 12,
+    "memoryGb": 31.7,
+    "mongoVersion": "8.0.34"
+  },
+  "users": {
+    "typicalUsers": 20,
+    "typicalRatings": 70,
+    "heavyUsers": 5,
+    "heaviestRatings": 2698
+  },
+  "iterations": 100,
+  "latency": [
+    {
+      "scenario": "browse_popular",
+      "description": "Catalog page, most rated first",
+      "requests": 100,
+      "errors": 0,
+      "minMs": 4.46,
+      "p50Ms": 5.11,
+      "p95Ms": 6.04,
+      "p99Ms": 8.39,
+      "maxMs": 11.08,
+      "meanMs": 5.26,
+      "note": null
+    },
+    {
+      "scenario": "browse_genre_best_rated",
+      "description": "One genre, best rated first, at least 50 ratings",
+      "requests": 100,
+      "errors": 0,
+      "minMs": 2.34,
+      "p50Ms": 2.62,
+      "p95Ms": 3.27,
+      "p99Ms": 3.91,
+      "maxMs": 8.27,
+      "meanMs": 2.82,
+      "note": null
+    },
+    {
+      "scenario": "search_text",
+      "description": "Text search over titles and tags",
+      "requests": 100,
+      "errors": 0,
+      "minMs": 2.23,
+      "p50Ms": 2.72,
+      "p95Ms": 3.16,
+      "p99Ms": 3.38,
+      "maxMs": 3.41,
+      "meanMs": 2.73,
+      "note": null
+    },
+    {
+      "scenario": "movie_details",
+      "description": "One movie by id",
+      "requests": 100,
+      "errors": 0,
+      "minMs": 1.28,
+      "p50Ms": 1.54,
+      "p95Ms": 1.99,
+      "p99Ms": 2.2,
+      "maxMs": 2.6,
+      "meanMs": 1.6,
+      "note": null
+    },
+    {
+      "scenario": "similar_movies",
+      "description": "Stored neighbors of one movie",
+      "requests": 100,
+      "errors": 0,
+      "minMs": 3.03,
+      "p50Ms": 3.35,
+      "p95Ms": 4,
+      "p99Ms": 5.42,
+      "maxMs": 5.55,
+      "meanMs": 3.49,
+      "note": null
+    },
+    {
+      "scenario": "popular_in_genre",
+      "description": "Best-rated movies of one genre (weighted average)",
+      "requests": 100,
+      "errors": 0,
+      "minMs": 5.1,
+      "p50Ms": 7.7,
+      "p95Ms": 13.81,
+      "p99Ms": 14.56,
+      "maxMs": 14.56,
+      "meanMs": 9.13,
+      "note": null
+    },
+    {
+      "scenario": "user_history",
+      "description": "A typical user\u0027s latest ratings",
+      "requests": 100,
+      "errors": 0,
+      "minMs": 2.9,
+      "p50Ms": 3.26,
+      "p95Ms": 4.09,
+      "p99Ms": 4.58,
+      "maxMs": 8.78,
+      "meanMs": 3.4,
+      "note": null
+    },
+    {
+      "scenario": "recommendations_typical",
+      "description": "Personal recommendations, user with a typical number of ratings",
+      "requests": 100,
+      "errors": 0,
+      "minMs": 5.68,
+      "p50Ms": 6.3,
+      "p95Ms": 7.59,
+      "p99Ms": 9,
+      "maxMs": 12.27,
+      "meanMs": 6.53,
+      "note": null
+    },
+    {
+      "scenario": "recommendations_heavy",
+      "description": "Personal recommendations, the users with the most ratings",
+      "requests": 100,
+      "errors": 0,
+      "minMs": 24.48,
+      "p50Ms": 37.32,
+      "p95Ms": 57.58,
+      "p99Ms": 78.89,
+      "maxMs": 83.42,
+      "meanMs": 38.95,
+      "note": null
+    },
+    {
+      "scenario": "rating_add",
+      "description": "Rate a movie (rating \u002B movie statistics in one transaction)",
+      "requests": 100,
+      "errors": 0,
+      "minMs": 5.15,
+      "p50Ms": 6.21,
+      "p95Ms": 8.22,
+      "p99Ms": 9.65,
+      "maxMs": 10.55,
+      "meanMs": 6.56,
+      "note": null
+    },
+    {
+      "scenario": "rating_remove",
+      "description": "Remove a rating (transaction)",
+      "requests": 100,
+      "errors": 0,
+      "minMs": 4.21,
+      "p50Ms": 5.22,
+      "p95Ms": 6.45,
+      "p99Ms": 7.21,
+      "maxMs": 7.8,
+      "meanMs": 5.4,
+      "note": null
+    }
+  ],
+  "plans": [
+    {
+      "query": "Catalog page, most rated first",
+      "collection": "movies",
+      "docsExamined": 20,
+      "keysExamined": 20,
+      "returned": 20,
+      "serverMillis": 0,
+      "plan": "LIMIT \u003E FETCH \u003E IXSCAN(ratingStats.count_-1__id_1)"
+    },
+    {
+      "query": "Genre page, best rated first (50\u002B ratings)",
+      "collection": "movies",
+      "docsExamined": 181,
+      "keysExamined": 181,
+      "returned": 20,
+      "serverMillis": 1,
+      "plan": "SORT \u003E FETCH \u003E IXSCAN(genres_1_ratingStats.count_-1__id_1)"
+    },
+    {
+      "query": "Text search for \u0022star\u0022",
+      "collection": "movies",
+      "docsExamined": 46,
+      "keysExamined": 46,
+      "returned": 20,
+      "serverMillis": 0,
+      "plan": "SORT \u003E TEXT_MATCH(text_title_tags) \u003E TEXT_OR \u003E IXSCAN(text_title_tags)"
+    },
+    {
+      "query": "One movie by id",
+      "collection": "movies",
+      "docsExamined": 1,
+      "keysExamined": 1,
+      "returned": 1,
+      "serverMillis": 0,
+      "plan": "EXPRESS_IXSCAN(_id_)"
+    },
+    {
+      "query": "One user\u0027s rating of one movie",
+      "collection": "ratings",
+      "docsExamined": 1,
+      "keysExamined": 1,
+      "returned": 1,
+      "serverMillis": 0,
+      "plan": "LIMIT \u003E FETCH \u003E IXSCAN(userId_1_movieId_1)"
+    },
+    {
+      "query": "A typical user\u0027s history page",
+      "collection": "ratings",
+      "docsExamined": 20,
+      "keysExamined": 20,
+      "returned": 20,
+      "serverMillis": 0,
+      "plan": "LIMIT \u003E FETCH \u003E IXSCAN(userId_1_ts_-1)"
+    },
+    {
+      "query": "All ratings of a typical user (recommendation input)",
+      "collection": "ratings",
+      "docsExamined": 70,
+      "keysExamined": 70,
+      "returned": 70,
+      "serverMillis": 0,
+      "plan": "FETCH \u003E IXSCAN(userId_1_movieId_1)"
+    },
+    {
+      "query": "All ratings of the heaviest user (recommendation input)",
+      "collection": "ratings",
+      "docsExamined": 2698,
+      "keysExamined": 2698,
+      "returned": 2698,
+      "serverMillis": 1,
+      "plan": "FETCH \u003E IXSCAN(userId_1_movieId_1)"
+    },
+    {
+      "query": "Neighbor lists of a typical user\u0027s rated movies",
+      "collection": "item_similarities",
+      "docsExamined": 68,
+      "keysExamined": 136,
+      "returned": 68,
+      "serverMillis": 0,
+      "plan": "FETCH \u003E IXSCAN(_id_)"
+    },
+    {
+      "query": "Popular movies of one genre (weighted average)",
+      "collection": "movies",
+      "docsExamined": 3753,
+      "keysExamined": 3753,
+      "returned": 3753,
+      "serverMillis": 9,
+      "plan": "SORT \u003E ADDFIELDS \u003E FETCH \u003E IXSCAN(genres_1_ratingStats.count_-1__id_1)"
+    }
+  ]
+}

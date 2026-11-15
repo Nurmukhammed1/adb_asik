@@ -87,6 +87,9 @@ public interface ISimilarityRepository
     Task<long> ReplaceAllAsync(IEnumerable<ItemSimilarity> entries, CancellationToken ct = default);
 
     Task<long> CountAsync(CancellationToken ct = default);
+
+    /// <summary>When the current set of entries was computed, or null if the table is empty.</summary>
+    Task<DateTime?> GetComputedAtAsync(CancellationToken ct = default);
 }
 
 public interface IEventRepository

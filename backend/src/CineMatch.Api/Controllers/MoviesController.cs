@@ -115,7 +115,10 @@ public class MoviesController(
         }
 
         var stats = await ratings.SetAsync(User.GetUserId(), id, request.Rating, ct);
-        return stats is null ? NotFound() : new RatingResponse(request.Rating, stats);
+        if (stats is null) return NotFound();
+
+        await recommender.ForgetUserAsync(User.GetUserId(), ct); // the cached list no longer matches the ratings
+        return new RatingResponse(request.Rating, stats);
     }
 
     /// <summary>Removes the caller's rating of a movie.</summary>
@@ -126,7 +129,10 @@ public class MoviesController(
     public async Task<ActionResult<RatingResponse>> Unrate(int id, CancellationToken ct)
     {
         var stats = await ratings.RemoveAsync(User.GetUserId(), id, ct);
-        return stats is null ? NotFound() : new RatingResponse(null, stats);
+        if (stats is null) return NotFound();
+
+        await recommender.ForgetUserAsync(User.GetUserId(), ct);
+        return new RatingResponse(null, stats);
     }
 
     /// <summary>Records that the caller viewed a movie.</summary>

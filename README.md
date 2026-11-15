@@ -11,7 +11,7 @@ system, user interface, performance testing).
 
 | Part | Technology |
 |---|---|
-| Database | MongoDB 8 (one-node replica set), Redis (reserved for caching, see [Status](#status)) |
+| Database | MongoDB 8 (one-node replica set), Redis (cache of recommendation lists) |
 | Backend | ASP.NET Core Web API, .NET 10, C# |
 | Frontend | Angular 22, TypeScript, Angular Material |
 | Tests | xUnit + Testcontainers (backend), Vitest (frontend) |
@@ -322,7 +322,6 @@ Working and tested: the whole backend, the recommender, the site, and the Docker
 
 Not done yet:
 
-- **Caching.** Redis is started by Docker Compose but nothing uses it yet.
 - **Measurements on large data.** Only the `small` dataset has been measured, with and without indexes.
 - **Posters and real descriptions** need a TMDB token (see [Loading the data](#loading-the-data));
   that import step is written but has not been run.

@@ -1,27 +1,27 @@
 {
   "dataset": "small",
-  "preparedAt": "2026-11-10T12:19:26.9240277Z",
+  "preparedAt": "2026-11-13T20:29:21.1171116Z",
   "import": {
     "movies": 9742,
     "ratings": 100836,
     "users": 611,
-    "moviesSeconds": 2.48,
-    "ratingsSeconds": 1.91,
-    "usersSeconds": 3.19,
-    "ratingStatsSeconds": 0.96,
-    "indexSeconds": 2.97,
-    "totalSeconds": 11.77
+    "moviesSeconds": 0.25,
+    "ratingsSeconds": 0.41,
+    "usersSeconds": 0.37,
+    "ratingStatsSeconds": 0.26,
+    "indexSeconds": 0.81,
+    "totalSeconds": 2.15
   },
   "similarity": {
-    "startedAt": "2026-11-10T12:19:22.6997294Z",
+    "startedAt": "2026-11-13T20:29:20.4526959Z",
     "users": 610,
     "movies": 9724,
     "ratings": 100836,
     "moviesWithNeighbors": 3586,
     "storedPairs": 154521,
-    "loadSeconds": 1.71,
-    "buildSeconds": 1.67,
-    "saveSeconds": 0.84
+    "loadSeconds": 0.26,
+    "buildSeconds": 0.13,
+    "saveSeconds": 0.27
   },
   "data": {
     "key": "small",
@@ -30,7 +30,7 @@
     "ratings": 100836,
     "moviesWithNeighbors": 3586,
     "dataMb": 15.2,
-    "indexMb": 4
+    "indexMb": 5
   },
   "machine": {
     "os": "Microsoft Windows 10.0.26300",

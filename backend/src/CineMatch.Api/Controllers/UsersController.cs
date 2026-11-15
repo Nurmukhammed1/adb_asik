@@ -2,6 +2,7 @@ using CineMatch.Api.Auth;
 using CineMatch.Api.Contracts;
 using CineMatch.Core.Interfaces;
 using CineMatch.Core.Models;
+using CineMatch.Recommender;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +22,8 @@ public class UsersController(
     IMovieRepository movies,
     IRatingRepository ratings,
     IEventRepository events,
-    IWatchlistRepository watchlist) : ControllerBase
+    IWatchlistRepository watchlist,
+    RecommendationService recommender) : ControllerBase
 {
     private int UserId => User.GetUserId();
 
@@ -49,6 +51,7 @@ public class UsersController(
                 .ToList(),
         };
         if (!await users.UpdateProfileAsync(UserId, profile, ct)) return NotFound();
+        await recommender.ForgetUserAsync(UserId, ct); // favorite genres steer the lists of new users
 
         var user = await users.GetByIdAsync(UserId, ct);
         return user is null ? NotFound() : UserDto.From(user);

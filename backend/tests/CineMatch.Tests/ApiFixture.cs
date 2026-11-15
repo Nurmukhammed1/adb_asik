@@ -42,6 +42,7 @@ public sealed class ApiFixture : IAsyncLifetime
                 ["Mongo:Database"] = "cinematch_tests",
                 ["Jwt:SigningKey"] = Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N"),
                 ["Recommender:BuildOnStartupIfEmpty"] = "false", // tests rebuild exactly when they mean to
+                ["Redis:ConnectionString"] = "", // no cache: tests check computed answers, not a shared Redis
             }));
         });
     }

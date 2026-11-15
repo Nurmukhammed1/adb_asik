@@ -46,4 +46,13 @@ public class SimilarityRepository(MongoContext ctx) : ISimilarityRepository
 
     public Task<long> CountAsync(CancellationToken ct = default) =>
         ctx.ItemSimilarities.EstimatedDocumentCountAsync(cancellationToken: ct);
+
+    // Every entry of one rebuild carries the same time, so any one of them tells which set is live.
+    public async Task<DateTime?> GetComputedAtAsync(CancellationToken ct = default)
+    {
+        var entry = await ctx.ItemSimilarities.Find(Builders<ItemSimilarity>.Filter.Empty)
+            .Project(s => new { s.ComputedAt })
+            .FirstOrDefaultAsync(ct);
+        return entry?.ComputedAt;
+    }
 }

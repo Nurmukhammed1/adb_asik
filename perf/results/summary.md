@@ -15,63 +15,64 @@ Times in seconds. "Import" is the whole import; the next three columns are parts
 
 | Dataset | Movies | Users | Ratings | Import | Insert ratings | Rating stats | Build indexes | Similarity: load | build | save | Movies with neighbors | Data (MB) | Indexes (MB) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| small | 9,742 | 611 | 100,836 | 11.8 | 1.9 | 1.0 | 3.0 | 1.7 | 1.7 | 0.8 | 3,586 | 15 | 4 |
-| 1m | 3,883 | 6,041 | 1,000,209 | 21.1 | 9.4 | 1.1 | 6.5 | 7.2 | 3.5 | 0.7 | 3,395 | 80 | 47 |
+| small | 9,742 | 611 | 100,836 | 2.2 | 0.4 | 0.3 | 0.8 | 0.3 | 0.1 | 0.3 | 3,586 | 15 | 5 |
+| 1m | 3,883 | 6,041 | 1,000,209 | 7.1 | 2.9 | 0.3 | 3.1 | 1.5 | 0.3 | 0.2 | 3,395 | 80 | 50 |
+| 10m | 10,681 | 69,879 | 10,000,054 | 60.8 | 24.6 | 3.0 | 30.0 | 19.2 | 2.9 | 0.5 | 10,174 | 754 | 543 |
 
 ## Response times
 
 Milliseconds, measured at the client for requests sent one after another. Each cell is
 **median / 95th percentile** (95% of requests were at least this fast).
 
-### Stage: no-indexes
+### Stage: before
 
-| Request | small (100,836 ratings) |
-|---|---:|
-| Catalog page, most rated first (`browse_popular`) | 33.3 / 43.3 |
-| One genre, best rated first, at least 50 ratings (`browse_genre_best_rated`) | 28.0 / 37.2 |
-| Text search over titles and tags (`search_text`) | failed |
-| One movie by id (`movie_details`) | 10.3 / 13.2 |
-| Stored neighbors of one movie (`similar_movies`) | 29.4 / 36.1 |
-| Best-rated movies of one genre (weighted average) (`popular_in_genre`) | 43.4 / 62.8 |
-| A typical user's latest ratings (`user_history`) | 103.2 / 128.1 |
-| Personal recommendations, user with a typical number of ratings (`recommendations_typical`) | 108.3 / 151.6 |
-| Personal recommendations, the users with the most ratings (`recommendations_heavy`) | 325.2 / 452.6 |
-| Rate a movie (rating + movie statistics in one transaction) (`rating_add`) | 91.9 / 140.2 |
-| Remove a rating (transaction) (`rating_remove`) | 75.3 / 100.9 |
+| Request | small (100,836 ratings) | 1m (1,000,209 ratings) | 10m (10,000,054 ratings) |
+|---|---:|---:|---:|
+| Catalog page, most rated first (`browse_popular`) | 5.1 / 6.0 | 3.7 / 5.2 | 6.3 / 7.5 |
+| One genre, best rated first, at least 50 ratings (`browse_genre_best_rated`) | 2.6 / 3.3 | 3.0 / 3.7 | 3.3 / 4.0 |
+| Text search over titles and tags (`search_text`) | 2.7 / 3.2 | 2.6 / 3.4 | 3.1 / 4.0 |
+| One movie by id (`movie_details`) | 1.5 / 2.0 | 3.2 / 4.1 | 1.5 / 2.1 |
+| Stored neighbors of one movie (`similar_movies`) | 3.4 / 4.0 | 3.8 / 4.9 | 3.7 / 5.0 |
+| Best-rated movies of one genre (weighted average) (`popular_in_genre`) | 7.7 / 13.8 | 5.4 / 8.1 | 8.0 / 18.3 |
+| A typical user's latest ratings (`user_history`) | 3.3 / 4.1 | 4.1 / 7.1 | 3.5 / 4.1 |
+| Personal recommendations, user with a typical number of ratings (`recommendations_typical`) | 6.3 / 7.6 | 8.6 / 12.7 | 6.9 / 8.7 |
+| Personal recommendations, the users with the most ratings (`recommendations_heavy`) | 37.3 / 57.6 | 42.7 / 67.1 | 112.0 / 160.6 |
+| Rate a movie (rating + movie statistics in one transaction) (`rating_add`) | 6.2 / 8.2 | 6.1 / 8.0 | 6.9 / 8.6 |
+| Remove a rating (transaction) (`rating_remove`) | 5.2 / 6.5 | 5.2 / 6.5 | 6.9 / 9.8 |
 
-### Stage: indexes
+### Stage: after
 
-| Request | small (100,836 ratings) |
-|---|---:|
-| Catalog page, most rated first (`browse_popular`) | 15.4 / 25.2 |
-| One genre, best rated first, at least 50 ratings (`browse_genre_best_rated`) | 9.5 / 15.4 |
-| Text search over titles and tags (`search_text`) | 9.1 / 11.2 |
-| One movie by id (`movie_details`) | 7.8 / 25.0 |
-| Stored neighbors of one movie (`similar_movies`) | 22.9 / 81.4 |
-| Best-rated movies of one genre (weighted average) (`popular_in_genre`) | 24.7 / 57.8 |
-| A typical user's latest ratings (`user_history`) | 14.4 / 19.8 |
-| Personal recommendations, user with a typical number of ratings (`recommendations_typical`) | 28.8 / 36.9 |
-| Personal recommendations, the users with the most ratings (`recommendations_heavy`) | 262.7 / 388.6 |
-| Rate a movie (rating + movie statistics in one transaction) (`rating_add`) | 24.3 / 37.8 |
-| Remove a rating (transaction) (`rating_remove`) | 20.6 / 31.3 |
+| Request | small | 1m | 10m (10,000,054 ratings) |
+|---|---:|---:|---:|
+| Catalog page, most rated first (`browse_popular`) | – | – | 7.3 / 12.8 |
+| One genre, best rated first, at least 50 ratings (`browse_genre_best_rated`) | – | – | 4.6 / 10.0 |
+| Text search over titles and tags (`search_text`) | – | – | 3.5 / 5.5 |
+| One movie by id (`movie_details`) | – | – | 2.1 / 3.9 |
+| Stored neighbors of one movie (`similar_movies`) | – | – | 5.4 / 11.3 |
+| Best-rated movies of one genre (weighted average) (`popular_in_genre`) | – | – | 1.5 / 2.9 |
+| A typical user's latest ratings (`user_history`) | – | – | 3.9 / 6.3 |
+| Personal recommendations, user with a typical number of ratings (`recommendations_typical`) | – | – | 1.9 / 9.8 |
+| Personal recommendations, the users with the most ratings (`recommendations_heavy`) | – | – | 2.1 / 3.2 |
+| Rate a movie (rating + movie statistics in one transaction) (`rating_add`) | – | – | 7.6 / 10.1 |
+| Remove a rating (transaction) (`rating_remove`) | – | – | 7.4 / 10.4 |
 
-### Stages compared on dataset small
+### Stages compared on dataset 10m
 
 95th percentile in milliseconds. The last column is the first stage divided by the last.
 
-| Request | no-indexes | indexes | Speed-up |
+| Request | before | after | Speed-up |
 |---|---:|---:|---:|
-| Catalog page, most rated first | 43.3 | 25.2 | 1.7x |
-| One genre, best rated first, at least 50 ratings | 37.2 | 15.4 | 2.4x |
-| Text search over titles and tags | failed | 11.2 | – |
-| One movie by id | 13.2 | 25.0 | 0.5x |
-| Stored neighbors of one movie | 36.1 | 81.4 | 0.4x |
-| Best-rated movies of one genre (weighted average) | 62.8 | 57.8 | 1.1x |
-| A typical user's latest ratings | 128.1 | 19.8 | 6.5x |
-| Personal recommendations, user with a typical number of ratings | 151.6 | 36.9 | 4.1x |
-| Personal recommendations, the users with the most ratings | 452.6 | 388.6 | 1.2x |
-| Rate a movie (rating + movie statistics in one transaction) | 140.2 | 37.8 | 3.7x |
-| Remove a rating (transaction) | 100.9 | 31.3 | 3.2x |
+| Catalog page, most rated first | 7.5 | 12.8 | 0.6x |
+| One genre, best rated first, at least 50 ratings | 4.0 | 10.0 | 0.4x |
+| Text search over titles and tags | 4.0 | 5.5 | 0.7x |
+| One movie by id | 2.1 | 3.9 | 0.5x |
+| Stored neighbors of one movie | 5.0 | 11.3 | 0.4x |
+| Best-rated movies of one genre (weighted average) | 18.3 | 2.9 | 6.2x |
+| A typical user's latest ratings | 4.1 | 6.3 | 0.6x |
+| Personal recommendations, user with a typical number of ratings | 8.7 | 9.8 | 0.9x |
+| Personal recommendations, the users with the most ratings | 160.6 | 3.2 | 50.4x |
+| Rate a movie (rating + movie statistics in one transaction) | 8.6 | 10.1 | 0.9x |
+| Remove a rating (transaction) | 9.8 | 10.4 | 0.9x |
 
 ## Test users
 
@@ -80,42 +81,70 @@ Requests that need a login use imported accounts picked by their number of ratin
 | Dataset | "Typical" users | Their ratings (median user) | "Heavy" users | Ratings of the heaviest |
 |---|---:|---:|---:|---:|
 | small | 20 | 70 | 5 | 2,698 |
+| 1m | 20 | 96 | 5 | 2,314 |
+| 10m | 20 | 69 | 5 | 7,359 |
 
 ## Query plans
 
 How MongoDB executed the API's main queries. "Examined" far above "returned" means the
 query read documents it did not need; `COLLSCAN` means it read the whole collection.
 
-### no-indexes, dataset small (100,836 ratings)
-
-| Query | Collection | Docs examined | Index keys examined | Returned | Server ms | Plan |
-|---|---|---:|---:|---:|---:|---|
-| Catalog page, most rated first | movies | 9,742 | 0 | 20 | 14 | SORT > COLLSCAN |
-| Genre page, best rated first (50+ ratings) | movies | 9,742 | 0 | 20 | 15 | SORT > COLLSCAN |
-| Text search for "star" | movies | 0 | 0 | 0 | 0 | FAILED: Command explain failed: text index required for $text query. |
-| One movie by id | movies | 1 | 1 | 1 | 0 | EXPRESS_IXSCAN(_id_) |
-| One user's rating of one movie | ratings | 18,907 | 0 | 1 | 15 | LIMIT > COLLSCAN |
-| A typical user's history page | ratings | 100,836 | 0 | 20 | 44 | SORT > COLLSCAN |
-| All ratings of a typical user (recommendation input) | ratings | 100,836 | 0 | 70 | 51 | COLLSCAN |
-| All ratings of the heaviest user (recommendation input) | ratings | 100,836 | 0 | 2,698 | 44 | COLLSCAN |
-| Neighbor lists of a typical user's rated movies | item_similarities | 68 | 136 | 68 | 1 | FETCH > IXSCAN(_id_) |
-| Popular movies of one genre (weighted average) | movies | 9,742 | 0 | 3,753 | 30 | SORT > ADDFIELDS > COLLSCAN |
-
-### indexes, dataset small (100,836 ratings)
+### before, dataset small (100,836 ratings)
 
 | Query | Collection | Docs examined | Index keys examined | Returned | Server ms | Plan |
 |---|---|---:|---:|---:|---:|---|
 | Catalog page, most rated first | movies | 20 | 20 | 20 | 0 | LIMIT > FETCH > IXSCAN(ratingStats.count_-1__id_1) |
-| Genre page, best rated first (50+ ratings) | movies | 181 | 181 | 20 | 4 | SORT > FETCH > IXSCAN(genres_1_ratingStats.count_-1__id_1) |
-| Text search for "star" | movies | 46 | 46 | 20 | 1 | SORT > TEXT_MATCH(text_title_tags) > TEXT_OR > IXSCAN(text_title_tags) |
+| Genre page, best rated first (50+ ratings) | movies | 181 | 181 | 20 | 1 | SORT > FETCH > IXSCAN(genres_1_ratingStats.count_-1__id_1) |
+| Text search for "star" | movies | 46 | 46 | 20 | 0 | SORT > TEXT_MATCH(text_title_tags) > TEXT_OR > IXSCAN(text_title_tags) |
 | One movie by id | movies | 1 | 1 | 1 | 0 | EXPRESS_IXSCAN(_id_) |
 | One user's rating of one movie | ratings | 1 | 1 | 1 | 0 | LIMIT > FETCH > IXSCAN(userId_1_movieId_1) |
-| A typical user's history page | ratings | 20 | 20 | 20 | 1 | LIMIT > FETCH > IXSCAN(userId_1_ts_-1) |
-| All ratings of a typical user (recommendation input) | ratings | 70 | 70 | 70 | 1 | FETCH > IXSCAN(userId_1_movieId_1) |
-| All ratings of the heaviest user (recommendation input) | ratings | 2,698 | 2,698 | 2,698 | 6 | FETCH > IXSCAN(userId_1_movieId_1) |
-| Neighbor lists of a typical user's rated movies | item_similarities | 68 | 136 | 68 | 1 | FETCH > IXSCAN(_id_) |
-| Popular movies of one genre (weighted average) | movies | 3,753 | 3,753 | 3,753 | 26 | SORT > ADDFIELDS > FETCH > IXSCAN(genres_1_ratingStats.count_-1__id_1) |
+| A typical user's history page | ratings | 20 | 20 | 20 | 0 | LIMIT > FETCH > IXSCAN(userId_1_ts_-1) |
+| All ratings of a typical user (recommendation input) | ratings | 70 | 70 | 70 | 0 | FETCH > IXSCAN(userId_1_movieId_1) |
+| All ratings of the heaviest user (recommendation input) | ratings | 2,698 | 2,698 | 2,698 | 1 | FETCH > IXSCAN(userId_1_movieId_1) |
+| Neighbor lists of a typical user's rated movies | item_similarities | 68 | 136 | 68 | 0 | FETCH > IXSCAN(_id_) |
+| Popular movies of one genre (weighted average) | movies | 3,753 | 3,753 | 3,753 | 9 | SORT > ADDFIELDS > FETCH > IXSCAN(genres_1_ratingStats.count_-1__id_1) |
 
-## Notes
+### before, dataset 1m (1,000,209 ratings)
 
-- no-indexes, small, `search_text`: 100 requests, 100 failed (HTTP 500).
+| Query | Collection | Docs examined | Index keys examined | Returned | Server ms | Plan |
+|---|---|---:|---:|---:|---:|---|
+| Catalog page, most rated first | movies | 20 | 20 | 20 | 0 | LIMIT > FETCH > IXSCAN(ratingStats.count_-1__id_1) |
+| Genre page, best rated first (50+ ratings) | movies | 125 | 125 | 20 | 1 | LIMIT > FETCH > IXSCAN(ratingStats.avg_-1_ratingStats.count_-1__id_1) |
+| Text search for "star" | movies | 22 | 22 | 20 | 0 | SORT > TEXT_MATCH(text_title_tags) > TEXT_OR > IXSCAN(text_title_tags) |
+| One movie by id | movies | 1 | 1 | 1 | 0 | EXPRESS_IXSCAN(_id_) |
+| One user's rating of one movie | ratings | 1 | 1 | 1 | 0 | LIMIT > FETCH > IXSCAN(userId_1_movieId_1) |
+| A typical user's history page | ratings | 20 | 20 | 20 | 0 | LIMIT > FETCH > IXSCAN(userId_1_ts_-1) |
+| All ratings of a typical user (recommendation input) | ratings | 96 | 96 | 96 | 0 | FETCH > IXSCAN(userId_1_movieId_1) |
+| All ratings of the heaviest user (recommendation input) | ratings | 2,314 | 2,314 | 2,314 | 1 | FETCH > IXSCAN(userId_1_movieId_1) |
+| Neighbor lists of a typical user's rated movies | item_similarities | 96 | 186 | 96 | 0 | FETCH > IXSCAN(_id_) |
+| Popular movies of one genre (weighted average) | movies | 1,163 | 1,163 | 1,163 | 3 | SORT > ADDFIELDS > FETCH > IXSCAN(genres_1_ratingStats.count_-1__id_1) |
+
+### before, dataset 10m (10,000,054 ratings)
+
+| Query | Collection | Docs examined | Index keys examined | Returned | Server ms | Plan |
+|---|---|---:|---:|---:|---:|---|
+| Catalog page, most rated first | movies | 20 | 20 | 20 | 0 | LIMIT > FETCH > IXSCAN(ratingStats.count_-1__id_1) |
+| Genre page, best rated first (50+ ratings) | movies | 105 | 105 | 20 | 1 | LIMIT > FETCH > IXSCAN(ratingStats.avg_-1_ratingStats.count_-1__id_1) |
+| Text search for "star" | movies | 87 | 87 | 20 | 0 | SORT > TEXT_MATCH(text_title_tags) > TEXT_OR > IXSCAN(text_title_tags) |
+| One movie by id | movies | 1 | 1 | 1 | 0 | EXPRESS_IXSCAN(_id_) |
+| One user's rating of one movie | ratings | 0 | 0 | 0 | 0 | LIMIT > FETCH > IXSCAN(userId_1_movieId_1) |
+| A typical user's history page | ratings | 20 | 20 | 20 | 0 | LIMIT > FETCH > IXSCAN(userId_1_ts_-1) |
+| All ratings of a typical user (recommendation input) | ratings | 69 | 69 | 69 | 0 | FETCH > IXSCAN(userId_1_movieId_1) |
+| All ratings of the heaviest user (recommendation input) | ratings | 7,359 | 7,359 | 7,359 | 8 | FETCH > IXSCAN(userId_1_movieId_1) |
+| Neighbor lists of a typical user's rated movies | item_similarities | 69 | 136 | 69 | 1 | FETCH > IXSCAN(_id_) |
+| Popular movies of one genre (weighted average) | movies | 3,703 | 3,703 | 3,703 | 17 | SORT > ADDFIELDS > FETCH > IXSCAN(genres_1_ratingStats.count_-1__id_1) |
+
+### after, dataset 10m (10,000,054 ratings)
+
+| Query | Collection | Docs examined | Index keys examined | Returned | Server ms | Plan |
+|---|---|---:|---:|---:|---:|---|
+| Catalog page, most rated first | movies | 20 | 20 | 20 | 0 | LIMIT > FETCH > IXSCAN(ratingStats.count_-1__id_1) |
+| Genre page, best rated first (50+ ratings) | movies | 105 | 105 | 20 | 1 | LIMIT > FETCH > IXSCAN(ratingStats.avg_-1_ratingStats.count_-1__id_1) |
+| Text search for "star" | movies | 87 | 87 | 20 | 0 | SORT > TEXT_MATCH(text_title_tags) > TEXT_OR > IXSCAN(text_title_tags) |
+| One movie by id | movies | 1 | 1 | 1 | 0 | EXPRESS_IXSCAN(_id_) |
+| One user's rating of one movie | ratings | 0 | 0 | 0 | 0 | LIMIT > FETCH > IXSCAN(userId_1_movieId_1) |
+| A typical user's history page | ratings | 20 | 20 | 20 | 0 | LIMIT > FETCH > IXSCAN(userId_1_ts_-1) |
+| All ratings of a typical user (recommendation input) | ratings | 69 | 69 | 69 | 0 | FETCH > IXSCAN(userId_1_movieId_1) |
+| All ratings of the heaviest user (recommendation input) | ratings | 7,359 | 7,359 | 7,359 | 5 | FETCH > IXSCAN(userId_1_movieId_1) |
+| Neighbor lists of a typical user's rated movies | item_similarities | 69 | 136 | 69 | 0 | FETCH > IXSCAN(_id_) |
+| Popular movies of one genre (weighted average) | movies | 3,703 | 3,703 | 3,703 | 21 | SORT > ADDFIELDS > FETCH > IXSCAN(genres_1_ratingStats.count_-1__id_1) |
